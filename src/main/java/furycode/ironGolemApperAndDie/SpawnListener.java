@@ -3,31 +3,48 @@ package furycode.ironGolemApperAndDie;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
+
 public class SpawnListener implements Listener {
     private final JavaPlugin plugin;
+    private final List<String> ignoredWorlds;
 
-    public SpawnListener(JavaPlugin plugin) {
+    public SpawnListener(JavaPlugin plugin, List<String> ignoredWorlds) {
         this.plugin = plugin;
+        this.ignoredWorlds = ignoredWorlds;
     }
 
     @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
+        // 1. Ignorar mundos configurados
         Entity entity = event.getEntity();
-        // Filtramos únicamente golems de hierro y nieve
+
+        String worldName = entity.getWorld().getName();
+        if (ignoredWorlds.contains(worldName)) {
+            return;
+        }
+
+        // Filtramos únicamente golems de hierro
         if (entity.getType() == EntityType.IRON_GOLEM) {
             // Tarea repetitiva para las partículas cada 0.5s
             new BukkitRunnable() {
                 int ticksPassed = 0;
+
                 @Override
                 public void run() {
                     if (ticksPassed >= 60) { // 60 ticks = 3 segundos
-                        entity.remove();
+                        if (entity instanceof LivingEntity) {
+                            LivingEntity le = (LivingEntity) entity;
+                            // Inflige daño muy alto para asegurarte de que muera
+                            le.damage(1000.0);
+                        }
                         cancel();
                         return;
                     }

@@ -1,0 +1,5 @@
+# Lista de mundos donde el plugin NO hará nada
+ignored-worlds:
+  - world_nether
+  - creative_world
+  # agrega tantos nombres de mundos como quieras
