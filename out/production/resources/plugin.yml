@@ -1,0 +1,6 @@
+name: IronGolemApperAndDie
+version: '1.0-SNAPSHOT'
+main: furycode.ironGolemApperAndDie.IronGolemApperAndDie
+api-version: '1.21'
+author: MatiasVME
+description: "Causes golems to die 3 seconds after spawning with particles."
